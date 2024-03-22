@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "typecastai"
-version = "0.1.0"
+version = "0.1.2"
 description = "typecast.ai api"
 authors = ["Juncheol Cho <zironycho@neosapience.com>"]
 readme = "README.md"
+homepage = "https://typecast.ai/"
+repository = "https://github.com/neosapience/typecast-python"
+documentation = "https://docs.typecast.ai"
+keywords = ["typecast", "ai", "tts", "speech", "text", "generative"]
 packages = [
     { include = "typecastai", from = "src"}
 ]

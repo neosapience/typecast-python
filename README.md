@@ -1,6 +1,7 @@
 # typecastai-python
 * [Typecast.ai](https://typecast.ai)
 * [Get API Token](https://biz.typecast.ai)
+* [Learn about Typecast SSFM(Speech Synthesis Foundation Model) v1](https://typecast.ai/learn/typecast-ssfm-text-to-speech/)
 
 ## Basic example
 
