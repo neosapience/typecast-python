@@ -1,4 +1,4 @@
-from typecast import Typecast
+from typecastai import Typecast
 import os
 
 

@@ -1,6 +1,6 @@
 .PHONY: build sh test dist
 
-name := typecast-python
+name := typecastai-python
 version := dev
 
 build:
@@ -9,18 +9,18 @@ build:
 sh:
 	@docker run --rm -it \
 		-v .:/code \
-		typecast-python:dev \
+		${name}:${version} \
 		bash
 
 test:
 	@docker run --rm -it \
 		-v .:/code \
 		-e typecast_token=${typecast_token} \
-		typecast-python:dev \
+		${name}:${version} \
 		poetry run pytest -lvs
 
 dist:
 	@docker run --rm -it \
 		-v .:/code \
-		typecast-python:dev \
+		${name}:${version} \
 		poetry build

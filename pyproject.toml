@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "typecast"
+name = "typecastai"
 version = "0.1.0"
-description = "typecast api"
+description = "typecast.ai api"
 authors = ["Juncheol Cho <zironycho@neosapience.com>"]
 readme = "README.md"
 packages = [
-    { include = "typecast", from = "src"}
+    { include = "typecastai", from = "src"}
 ]
 
 [tool.poetry.dependencies]
