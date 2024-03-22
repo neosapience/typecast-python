@@ -1,5 +1,6 @@
 # typecast-python
 [Typecast](https://typecast.ai)
+[Get API Token](https://biz.typecast.ai)
 
 ## Basic example
 
