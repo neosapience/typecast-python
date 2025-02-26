@@ -4,7 +4,7 @@ import requests
 
 from . import conf
 from .exceptions import TypecastError
-from .models import TTSRequest, TTSResponse
+from .models import TTSRequest, TTSResponse, VoicesResponse
 
 
 class Typecast:
@@ -24,10 +24,23 @@ class Typecast:
             f"{self.host}{endpoint}", json=request.model_dump(exclude_none=True)
         )
         if response.status_code != 200:
-            raise TypecastError(f"API request failed: {response.status_code}, {response.text}")
+            raise TypecastError(
+                f"API request failed: {response.status_code}, {response.text}"
+            )
 
         return TTSResponse(
             audio_data=response.content,
             duration=response.headers.get("X-Audio-Duration", 0),
             format=response.headers.get("Content-Type", "audio/wav").split("/")[-1],
         )
+
+    def voices(self) -> list[VoicesResponse]:
+        endpoint = "/v1/voices"
+        response = self.session.get(f"{self.host}{endpoint}")
+
+        if response.status_code != 200:
+            raise TypecastError(
+                f"API request failed: {response.status_code}, {response.text}"
+            )
+
+        return [VoicesResponse.model_validate(item) for item in response.json()]

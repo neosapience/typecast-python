@@ -1,8 +1,9 @@
+import time
+
 from typecast.client import Typecast
 from typecast.models import TTSRequest
 from typecast.utils import show_performance
 
-import time
 # 클라이언트 초기화
 cli = Typecast()
 
@@ -10,8 +11,8 @@ cli = Typecast()
 start_ts = time.time()
 res = cli.text_to_speech(TTSRequest(
     text="Hello there! I'm your friendly text-to-speech agent. I can help you convert any text into natural sounding speech. I support multiple languages and voices, and I can even adjust the speed, pitch and volume of the generated audio. Would you like to try it out?",
-    model="ssfm-v2.1",
-    character_id="default"
+    model="ssfm-v21",
+    voice_id="67ae94ead6403a3574789fb2"
 ))
 duration = time.time() - start_ts
 

@@ -20,7 +20,7 @@ cli = Typecast(api_key="YOUR_API_KEY")
 # Convert text to speech
 audio = cli.text_to_speech(TTSRequest(
     text="Hello there!",
-    model="ssfm-v20",
+    model="ssfm-v21",
     voice_id="tc_123456789"
 ))
 

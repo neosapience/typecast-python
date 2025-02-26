@@ -21,7 +21,7 @@ lint:
 
 format:
 	docker compose exec typecast-sdk-dev poetry run black src
-	docker compose exec typecast-sdk-dev poetry run isort 
+	docker compose exec typecast-sdk-dev poetry run isort .
 	
 dist:
 	docker compose exec typecast-sdk-dev poetry build
