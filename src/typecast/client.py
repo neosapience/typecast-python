@@ -34,9 +34,13 @@ class Typecast:
             format=response.headers.get("Content-Type", "audio/wav").split("/")[-1],
         )
 
-    def voices(self) -> list[VoicesResponse]:
+    def voices(self, model: Optional[str] = None) -> list[VoicesResponse]:
         endpoint = "/v1/voices"
-        response = self.session.get(f"{self.host}{endpoint}")
+        params = {}
+        if model:
+            params["model"] = model
+
+        response = self.session.get(f"{self.host}{endpoint}", params=params)
 
         if response.status_code != 200:
             raise TypecastError(

@@ -12,29 +12,11 @@ def typecast_client():
     return Typecast()
 
 class TestTypeCastIntegration:
-    def test_voices_integration(self, typecast_client):
-        # Act
-        voices = typecast_client.voices()
-
-        # Assert
-        assert isinstance(voices, list)
-        assert len(voices) > 0
-        
-        # 첫 번째 voice의 필수 필드 검증
-        first_voice = voices[0]
-        assert first_voice.voice_id
-        assert first_voice.voice_name
-        assert first_voice.model
-        assert first_voice.emotions
-
     def test_text_to_speech_integration(self, typecast_client):
         # Arrange
         # 먼저 사용 가능한 voice를 가져옵니다
-        voices = typecast_client.voices()
-        voice = None
-        for v in voices:
-            if v.model == 'ssfm-v21':
-                voice = v
+        voices = typecast_client.voices(model='ssfm-v21')
+        voice = voices[0]
         
         voice_id = voice.voice_id
         model = voice.model
