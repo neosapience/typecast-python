@@ -12,7 +12,7 @@ def typecast_client():
     # 환경 변수에서 API 키를 가져옵니다
     return Typecast()
 
-class TestTypeCastIntegration:
+class TestVoicesIntegration:
     def test_voices_integration(self, typecast_client):
         # Act
         voices = typecast_client.voices()

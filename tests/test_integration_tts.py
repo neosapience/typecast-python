@@ -11,7 +11,7 @@ def typecast_client():
     # 환경 변수에서 API 키를 가져옵니다
     return Typecast()
 
-class TestTypeCastIntegration:
+class TestTTSIntegration:
     def test_text_to_speech_integration(self, typecast_client):
         # Arrange
         # 먼저 사용 가능한 voice를 가져옵니다

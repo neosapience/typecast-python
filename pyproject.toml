@@ -26,6 +26,7 @@ black = "^23.0.0"
 flake8 = "^6.0.0"
 mypy = "^1.0.0"
 isort = "^5.0.0"
+pytest-mock = "^3.14.0"
 
 [tool.black]
 line-length = 88
