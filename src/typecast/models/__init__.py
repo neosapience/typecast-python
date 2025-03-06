@@ -1,5 +1,5 @@
 from .error import Error
-from .tts import TTSRequest, TTSResponse, Prompt, Output
+from .tts import Output, Prompt, TTSRequest, TTSResponse
 from .tts_wss import WebSocketMessage
 from .voices import VoicesResponse
 
@@ -10,5 +10,5 @@ __all__ = [
     "TTSResponse",
     "VoicesResponse",
     "Error",
-    "WebSocketMessage"
+    "WebSocketMessage",
 ]

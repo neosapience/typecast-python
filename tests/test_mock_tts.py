@@ -3,7 +3,7 @@ import os
 import pytest
 
 from typecast.client import Typecast
-from typecast.models import TTSRequest, TTSResponse, Prompt, Output
+from typecast.models import Output, Prompt, TTSRequest, TTSResponse
 
 
 @pytest.fixture

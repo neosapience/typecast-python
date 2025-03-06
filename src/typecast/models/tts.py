@@ -1,21 +1,21 @@
 from enum import Enum
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
 
 class TTSModel(str, Enum):
     SSFM_V10 = "ssfm-v10"
-    SSFM_V12 = "ssfm-v12" 
+    SSFM_V12 = "ssfm-v12"
     SSFM_V20 = "ssfm-v20"
     SSFM_V21 = "ssfm-v21"
 
 
 class Prompt(BaseModel):
     emotion_preset: Optional[str] = Field(
-        default="normal", 
+        default="normal",
         description="Emotion preset",
-        examples=["normal", "happy", "sad", "angry"]
+        examples=["normal", "happy", "sad", "angry"],
     )
     emotion_intensity: Optional[float] = Field(default=1.0, ge=0.0, le=2.0)
     speed: Optional[float] = Field(default=1.0, ge=0.5, le=2.0)
@@ -27,9 +27,7 @@ class Output(BaseModel):
     audio_pitch: Optional[int] = Field(default=0, ge=-12, le=12)
     audio_tempo: Optional[float] = Field(default=1.0, ge=0.5, le=2.0)
     audio_format: Optional[str] = Field(
-        default="wav",
-        description="Audio format",
-        examples=["wav", "mp3"]
+        default="wav", description="Audio format", examples=["wav", "mp3"]
     )
 
 
