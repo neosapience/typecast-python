@@ -18,8 +18,6 @@ class Prompt(BaseModel):
         examples=["normal", "happy", "sad", "angry"],
     )
     emotion_intensity: Optional[float] = Field(default=1.0, ge=0.0, le=2.0)
-    speed: Optional[float] = Field(default=1.0, ge=0.5, le=2.0)
-    intonation: Optional[int] = Field(default=0, ge=-2, le=2)
 
 
 class Output(BaseModel):
