@@ -80,4 +80,8 @@ class Typecast:
         if response.status_code != 200:
             self._handle_error(response.status_code, response.text)
 
-        return VoicesResponse.model_validate(response.json())
+        data = response.json()
+        # API returns a list, so we take the first element
+        if isinstance(data, list) and len(data) > 0:
+            return VoicesResponse.model_validate(data[0])
+        return VoicesResponse.model_validate(data)

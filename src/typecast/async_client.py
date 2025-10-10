@@ -99,4 +99,7 @@ class AsyncTypecast:
                 self._handle_error(response.status, error_text)
 
             data = await response.json()
+            # API returns a list, so we take the first element
+            if isinstance(data, list) and len(data) > 0:
+                return VoicesResponse.model_validate(data[0])
             return VoicesResponse.model_validate(data)
