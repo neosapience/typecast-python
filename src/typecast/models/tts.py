@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -9,6 +9,37 @@ class TTSModel(str, Enum):
     SSFM_V12 = "ssfm-v12"
     SSFM_V20 = "ssfm-v20"
     SSFM_V21 = "ssfm-v21"
+
+
+class LanguageCode(str, Enum):
+    """ISO 639-3 language codes supported by Typecast API"""
+    ENG = "eng"  # English
+    KOR = "kor"  # Korean
+    SPA = "spa"  # Spanish
+    DEU = "deu"  # German
+    FRA = "fra"  # French
+    ITA = "ita"  # Italian
+    POL = "pol"  # Polish
+    NLD = "nld"  # Dutch
+    RUS = "rus"  # Russian
+    JPN = "jpn"  # Japanese
+    ELL = "ell"  # Greek
+    TAM = "tam"  # Tamil
+    TGL = "tgl"  # Tagalog
+    FIN = "fin"  # Finnish
+    ZHO = "zho"  # Chinese
+    SLK = "slk"  # Slovak
+    ARA = "ara"  # Arabic
+    HRV = "hrv"  # Croatian
+    UKR = "ukr"  # Ukrainian
+    IND = "ind"  # Indonesian
+    DAN = "dan"  # Danish
+    SWE = "swe"  # Swedish
+    MSA = "msa"  # Malay
+    CES = "ces"  # Czech
+    POR = "por"  # Portuguese
+    BUL = "bul"  # Bulgarian
+    RON = "ron"  # Romanian
 
 
 class Prompt(BaseModel):
@@ -30,10 +61,10 @@ class Output(BaseModel):
 
 
 class TTSRequest(BaseModel):
-    voice_id: str = Field(description="Voice ID", examples=["67b5c03d9cf5c7788b5a4a32"])
+    voice_id: str = Field(description="Voice ID", examples=["tc_62a8975e695ad26f7fb514d1"])
     text: str = Field(description="Text", examples=["Hello. How are you?"])
-    model: TTSModel = Field(description="Voice model name", examples=["ssfm-v20"])
-    language: Optional[str] = Field(None, description="Language", examples=["eng"])
+    model: TTSModel = Field(description="Voice model name", examples=["ssfm-v21"])
+    language: Optional[Union[LanguageCode, str]] = Field(None, description="Language code (ISO 639-3)", examples=["eng"])
     prompt: Optional[Prompt] = None
     output: Optional[Output] = None
     seed: Optional[int] = None
