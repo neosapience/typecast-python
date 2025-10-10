@@ -3,7 +3,15 @@ from typing import Optional
 import aiohttp
 
 from . import conf
-from .exceptions import TypecastError
+from .exceptions import (
+    BadRequestError,
+    InternalServerError,
+    NotFoundError,
+    PaymentRequiredError,
+    TypecastError,
+    UnauthorizedError,
+    UnprocessableEntityError,
+)
 from .models import Error, TTSRequest, TTSResponse, VoicesResponse
 
 
@@ -23,6 +31,26 @@ class AsyncTypecast:
         if self.session:
             await self.session.close()
 
+    def _handle_error(self, status_code: int, response_text: str):
+        """Handle HTTP error responses with specific exception types"""
+        if status_code == 400:
+            raise BadRequestError(f"Bad request: {response_text}")
+        elif status_code == 401:
+            raise UnauthorizedError(f"Unauthorized: {response_text}")
+        elif status_code == 402:
+            raise PaymentRequiredError(f"Payment required: {response_text}")
+        elif status_code == 404:
+            raise NotFoundError(f"Not found: {response_text}")
+        elif status_code == 422:
+            raise UnprocessableEntityError(f"Validation error: {response_text}")
+        elif status_code == 500:
+            raise InternalServerError(f"Internal server error: {response_text}")
+        else:
+            raise TypecastError(
+                f"API request failed: {status_code}, {response_text}",
+                status_code=status_code,
+            )
+
     async def text_to_speech(self, request: TTSRequest) -> TTSResponse:
         if not self.session:
             raise TypecastError("Client session not initialized. Use async with.")
@@ -32,9 +60,7 @@ class AsyncTypecast:
         ) as response:
             if response.status != 200:
                 error_text = await response.text()
-                raise TypecastError(
-                    f"API request failed: {response.status}, {error_text}"
-                )
+                self._handle_error(response.status, error_text)
 
             audio_data = await response.read()
             return TTSResponse(
@@ -56,9 +82,7 @@ class AsyncTypecast:
         ) as response:
             if response.status != 200:
                 error_text = await response.text()
-                raise TypecastError(
-                    f"API request failed: {response.status}, {error_text}"
-                )
+                self._handle_error(response.status, error_text)
 
             data = await response.json()
             return [VoicesResponse.model_validate(item) for item in data]
@@ -71,9 +95,7 @@ class AsyncTypecast:
         async with self.session.get(f"{self.host}{endpoint}") as response:
             if response.status != 200:
                 error_text = await response.text()
-                raise TypecastError(
-                    f"API request failed: {response.status}, {error_text}"
-                )
+                self._handle_error(response.status, error_text)
 
             data = await response.json()
             return VoicesResponse.model_validate(data)

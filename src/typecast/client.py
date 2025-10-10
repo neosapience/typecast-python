@@ -3,7 +3,15 @@ from typing import Optional
 import requests
 
 from . import conf
-from .exceptions import TypecastError
+from .exceptions import (
+    BadRequestError,
+    InternalServerError,
+    NotFoundError,
+    PaymentRequiredError,
+    TypecastError,
+    UnauthorizedError,
+    UnprocessableEntityError,
+)
 from .models import TTSRequest, TTSResponse, VoicesResponse
 
 
@@ -18,15 +26,33 @@ class Typecast:
             {"X-API-KEY": self.api_key, "Content-Type": "application/json"}
         )
 
+    def _handle_error(self, status_code: int, response_text: str):
+        """Handle HTTP error responses with specific exception types"""
+        if status_code == 400:
+            raise BadRequestError(f"Bad request: {response_text}")
+        elif status_code == 401:
+            raise UnauthorizedError(f"Unauthorized: {response_text}")
+        elif status_code == 402:
+            raise PaymentRequiredError(f"Payment required: {response_text}")
+        elif status_code == 404:
+            raise NotFoundError(f"Not found: {response_text}")
+        elif status_code == 422:
+            raise UnprocessableEntityError(f"Validation error: {response_text}")
+        elif status_code == 500:
+            raise InternalServerError(f"Internal server error: {response_text}")
+        else:
+            raise TypecastError(
+                f"API request failed: {status_code}, {response_text}",
+                status_code=status_code,
+            )
+
     def text_to_speech(self, request: TTSRequest) -> TTSResponse:
         endpoint = "/v1/text-to-speech"
         response = self.session.post(
             f"{self.host}{endpoint}", json=request.model_dump(exclude_none=True)
         )
         if response.status_code != 200:
-            raise TypecastError(
-                f"API request failed: {response.status_code}, {response.text}"
-            )
+            self._handle_error(response.status_code, response.text)
 
         return TTSResponse(
             audio_data=response.content,
@@ -43,9 +69,7 @@ class Typecast:
         response = self.session.get(f"{self.host}{endpoint}", params=params)
 
         if response.status_code != 200:
-            raise TypecastError(
-                f"API request failed: {response.status_code}, {response.text}"
-            )
+            self._handle_error(response.status_code, response.text)
 
         return [VoicesResponse.model_validate(item) for item in response.json()]
 
@@ -54,8 +78,6 @@ class Typecast:
         response = self.session.get(f"{self.host}{endpoint}")
 
         if response.status_code != 200:
-            raise TypecastError(
-                f"API request failed: {response.status_code}, {response.text}"
-            )
+            self._handle_error(response.status_code, response.text)
 
         return VoicesResponse.model_validate(response.json())
