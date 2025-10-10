@@ -48,3 +48,14 @@ class Typecast:
             )
 
         return [VoicesResponse.model_validate(item) for item in response.json()]
+
+    def get_voice(self, voice_id: str) -> VoicesResponse:
+        endpoint = f"/v1/voices/{voice_id}"
+        response = self.session.get(f"{self.host}{endpoint}")
+
+        if response.status_code != 200:
+            raise TypecastError(
+                f"API request failed: {response.status_code}, {response.text}"
+            )
+
+        return VoicesResponse.model_validate(response.json())
