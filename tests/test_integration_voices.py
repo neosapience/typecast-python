@@ -4,7 +4,7 @@ import pytest
 
 from typecast.client import Typecast
 from typecast.exceptions import TypecastError
-from typecast.models import TTSRequest, TTSResponse, VoicesResponse
+from typecast.models import VoicesResponse
 
 
 @pytest.fixture

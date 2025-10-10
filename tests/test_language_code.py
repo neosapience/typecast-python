@@ -1,4 +1,3 @@
-import pytest
 
 from typecast.models import LanguageCode, TTSRequest
 

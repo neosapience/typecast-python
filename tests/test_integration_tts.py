@@ -3,7 +3,7 @@ import os
 import pytest
 
 from typecast.client import Typecast
-from typecast.models import TTSRequest, TTSResponse, VoicesResponse
+from typecast.models import TTSRequest, TTSResponse
 
 
 @pytest.fixture

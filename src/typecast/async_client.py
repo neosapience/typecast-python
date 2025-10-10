@@ -12,7 +12,7 @@ from .exceptions import (
     UnauthorizedError,
     UnprocessableEntityError,
 )
-from .models import Error, TTSRequest, TTSResponse, VoicesResponse
+from .models import TTSRequest, TTSResponse, VoicesResponse
 
 
 class AsyncTypecast:
