@@ -13,6 +13,7 @@ class TTSModel(str, Enum):
 
 class LanguageCode(str, Enum):
     """ISO 639-3 language codes supported by Typecast API"""
+
     ENG = "eng"  # English
     KOR = "kor"  # Korean
     SPA = "spa"  # Spanish
@@ -63,10 +64,14 @@ class Output(BaseModel):
 class TTSRequest(BaseModel):
     model_config = ConfigDict(json_schema_extra={"exclude_none": True})
 
-    voice_id: str = Field(description="Voice ID", examples=["tc_62a8975e695ad26f7fb514d1"])
+    voice_id: str = Field(
+        description="Voice ID", examples=["tc_62a8975e695ad26f7fb514d1"]
+    )
     text: str = Field(description="Text", examples=["Hello. How are you?"])
     model: TTSModel = Field(description="Voice model name", examples=["ssfm-v21"])
-    language: Optional[Union[LanguageCode, str]] = Field(None, description="Language code (ISO 639-3)", examples=["eng"])
+    language: Optional[Union[LanguageCode, str]] = Field(
+        None, description="Language code (ISO 639-3)", examples=["eng"]
+    )
     prompt: Optional[Prompt] = None
     output: Optional[Output] = None
     seed: Optional[int] = None

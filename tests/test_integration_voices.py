@@ -24,7 +24,7 @@ class TestVoicesIntegration:
         # Assert
         assert isinstance(voices, list)
         assert len(voices) > 0
-        
+
         # 첫 번째 voice의 필수 필드 검증
         first_voice = voices[0]
         assert first_voice.voice_id
@@ -33,7 +33,7 @@ class TestVoicesIntegration:
         assert first_voice.emotions
 
     def test_voices_with_model_filter_integration(self, typecast_client):
-        target_model = 'ssfm-v21'
+        target_model = "ssfm-v21"
 
         # Act
         voices = typecast_client.voices(model=target_model)
@@ -41,7 +41,7 @@ class TestVoicesIntegration:
         # Assert
         assert isinstance(voices, list)
         assert len(voices) > 0
-        
+
         # 모든 voice가 지정된 model을 가지고 있는지 확인
         for voice in voices:
             assert voice.model == target_model
@@ -50,7 +50,7 @@ class TestVoicesIntegration:
             assert voice.emotions
 
     def test_voices_with_invalid_model(self, typecast_client):
-        target_model = 'non-existent-model'
+        target_model = "non-existent-model"
 
         # Act
         with pytest.raises(TypecastError):

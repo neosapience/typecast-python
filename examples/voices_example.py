@@ -35,4 +35,3 @@ voice = cli.get_voice("tc_62a8975e695ad26f7fb514d1")
 print(f"Voice: {voice.voice_name}")
 print(f"Model: {voice.model}")
 print(f"Available emotions: {', '.join(voice.emotions)}")
-

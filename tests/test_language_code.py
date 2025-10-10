@@ -50,9 +50,33 @@ class TestLanguageCode:
     def test_all_language_codes_exist(self):
         """Test that all documented language codes exist"""
         expected_codes = [
-            "eng", "kor", "spa", "deu", "fra", "ita", "pol", "nld", "rus",
-            "jpn", "ell", "tam", "tgl", "fin", "zho", "slk", "ara", "hrv",
-            "ukr", "ind", "dan", "swe", "msa", "ces", "por", "bul", "ron"
+            "eng",
+            "kor",
+            "spa",
+            "deu",
+            "fra",
+            "ita",
+            "pol",
+            "nld",
+            "rus",
+            "jpn",
+            "ell",
+            "tam",
+            "tgl",
+            "fin",
+            "zho",
+            "slk",
+            "ara",
+            "hrv",
+            "ukr",
+            "ind",
+            "dan",
+            "swe",
+            "msa",
+            "ces",
+            "por",
+            "bul",
+            "ron",
         ]
 
         for code in expected_codes:
@@ -72,4 +96,3 @@ class TestLanguageCode:
         # Test model_dump includes language as string value
         dumped = request.model_dump(exclude_none=True)
         assert dumped["language"] == "kor"
-

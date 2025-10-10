@@ -41,4 +41,3 @@ with open("typecast_advanced.mp3", "wb") as f:
     f.write(response.audio_data)
 
 print(f"Audio saved: {response.format}, Duration: {response.duration}s")
-

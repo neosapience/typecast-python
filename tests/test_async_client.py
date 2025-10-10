@@ -70,4 +70,3 @@ class TestAsyncClient:
             assert voice.voice_name
             assert voice.model
             assert voice.emotions
-

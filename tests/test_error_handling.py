@@ -47,9 +47,7 @@ class TestErrorHandling:
         mock_response.status_code = 400
         mock_response.text = "Invalid request parameters"
 
-        mocker.patch.object(
-            typecast_client.session, "post", return_value=mock_response
-        )
+        mocker.patch.object(typecast_client.session, "post", return_value=mock_response)
 
         request = TTSRequest(
             text="Test",
@@ -69,9 +67,7 @@ class TestErrorHandling:
         mock_response.status_code = 402
         mock_response.text = "Insufficient credits"
 
-        mocker.patch.object(
-            typecast_client.session, "post", return_value=mock_response
-        )
+        mocker.patch.object(typecast_client.session, "post", return_value=mock_response)
 
         request = TTSRequest(
             text="Test",
@@ -105,9 +101,7 @@ class TestErrorHandling:
         mock_response.status_code = 422
         mock_response.text = "Validation error"
 
-        mocker.patch.object(
-            typecast_client.session, "post", return_value=mock_response
-        )
+        mocker.patch.object(typecast_client.session, "post", return_value=mock_response)
 
         request = TTSRequest(
             text="Test",
@@ -127,9 +121,7 @@ class TestErrorHandling:
         mock_response.status_code = 500
         mock_response.text = "Internal server error"
 
-        mocker.patch.object(
-            typecast_client.session, "post", return_value=mock_response
-        )
+        mocker.patch.object(typecast_client.session, "post", return_value=mock_response)
 
         request = TTSRequest(
             text="Test",
@@ -149,9 +141,7 @@ class TestErrorHandling:
         mock_response.status_code = 503
         mock_response.text = "Service unavailable"
 
-        mocker.patch.object(
-            typecast_client.session, "post", return_value=mock_response
-        )
+        mocker.patch.object(typecast_client.session, "post", return_value=mock_response)
 
         request = TTSRequest(
             text="Test",
@@ -164,4 +154,3 @@ class TestErrorHandling:
             typecast_client.text_to_speech(request)
 
         assert exc_info.value.status_code == 503
-

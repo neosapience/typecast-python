@@ -69,4 +69,5 @@ multi_line_output = 3
 [dependency-groups]
 dev = [
     "python-dotenv>=1.1.1",
+    "ruff>=0.14.0",
 ]
