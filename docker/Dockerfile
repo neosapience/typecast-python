@@ -1,32 +1,35 @@
-FROM python:3.13-rc-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
-# 기본 개발 도구 설치
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Poetry 설치 (의존성 관리를 위해)
-RUN curl -sSL https://install.python-poetry.org | python3 -
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 환경 변수 설정
+# Environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/root/.local/bin:$PATH"
+    PATH="/root/.local/bin:/root/.cargo/bin:$PATH" \
+    UV_SYSTEM_PYTHON=1
 
-# 프로젝트 의존성 파일 복사
-COPY pyproject.toml README.md ./
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
+COPY README.md LICENSE ./
 
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --no-root
+# Install dependencies
+RUN uv sync --frozen --all-extras
 
-# 소스 코드 복사
+# Copy source code
 COPY . .
 
-RUN poetry install --no-interaction --no-ansi
+# Install package in development mode
+RUN uv pip install -e .
 
-# 개발 서버 실행을 위한 기본 명령
-CMD ["poetry", "shell"] 
+# Default command for development
+CMD ["/bin/bash"] 

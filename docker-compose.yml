@@ -1,14 +1,18 @@
-version: '3.8'
-
 services:
-  typecast-sdk-dev:
+  typecast-dev:
     build:
       context: .
       dockerfile: docker/Dockerfile
     volumes:
       - .:/app
+      - uv-cache:/root/.cache/uv
     env_file:
       - .env
+    environment:
+      - PYTHONPATH=/app/src
     command: /bin/bash
     stdin_open: true
     tty: true
+
+volumes:
+  uv-cache:
