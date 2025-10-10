@@ -5,9 +5,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class TTSModel(str, Enum):
-    SSFM_V10 = "ssfm-v10"
-    SSFM_V12 = "ssfm-v12"
-    SSFM_V20 = "ssfm-v20"
     SSFM_V21 = "ssfm-v21"
 
 
