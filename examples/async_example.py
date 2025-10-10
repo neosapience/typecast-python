@@ -4,8 +4,13 @@ Async client example demonstrating asynchronous text-to-speech operations.
 
 import asyncio
 
+from dotenv import load_dotenv
+
 from typecast.async_client import AsyncTypecast
 from typecast.models import LanguageCode, TTSRequest
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 async def main():

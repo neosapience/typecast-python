@@ -2,8 +2,13 @@
 Advanced TTS example demonstrating emotion, pitch, tempo, and volume customization.
 """
 
+from dotenv import load_dotenv
+
 from typecast.client import Typecast
 from typecast.models import Output, Prompt, TTSRequest
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize client
 cli = Typecast()

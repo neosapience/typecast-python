@@ -1,8 +1,14 @@
 import time
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 from typecast.client import Typecast
 from typecast.models import TTSRequest
 from typecast.utils import show_performance
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize client
 cli = Typecast()

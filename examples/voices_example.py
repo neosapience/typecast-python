@@ -2,7 +2,12 @@
 Example demonstrating how to list and retrieve voice information.
 """
 
+from dotenv import load_dotenv
+
 from typecast.client import Typecast
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize client
 cli = Typecast()
