@@ -916,7 +916,7 @@ wheels = [
 ]
 
 [[package]]
-name = "typecast-sdk"
+name = "typecast"
 version = "0.1.2"
 source = { editable = "." }
 dependencies = [

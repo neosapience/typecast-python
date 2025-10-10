@@ -7,7 +7,7 @@ For comprehensive API documentation, visit [Typecast Documentation](https://type
 ## Installation
 
 ```bash
-pip install typecast-sdk
+pip install typecast
 ```
 
 ## Quick Start

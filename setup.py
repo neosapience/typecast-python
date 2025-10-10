@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="typecast-sdk",
+    name="typecast",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
 ) 

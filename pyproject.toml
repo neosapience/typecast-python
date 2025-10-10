@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "typecast-sdk"
+name = "typecast"
 version = "0.1.2"
 description = "Typecast SDK for Python - Convert text to lifelike speech using AI-powered voices"
 authors = [
