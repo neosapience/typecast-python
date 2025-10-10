@@ -57,6 +57,24 @@ Issues = "https://github.com/neosapience/typecast-python/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["src/typecast"]
 
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/LICENSE",
+    "/README.md",
+    "/pyproject.toml",
+]
+exclude = [
+    "/.env*",
+    "/tests",
+    "/examples",
+    "/spec",
+    "/docker",
+    "*.lock",
+    "/Makefile",
+    "/MANIFEST.in",
+]
+
 [tool.black]
 line-length = 88
 target-version = ['py38']
