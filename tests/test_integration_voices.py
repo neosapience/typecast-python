@@ -45,9 +45,25 @@ class TestVoicesIntegration:
             assert voice.voice_name
             assert voice.emotions
 
-    def test_voices_with_model_filter_integration(self, typecast_client):
+    def test_voices_with_invalid_model(self, typecast_client):
         target_model = 'non-existent-model'
 
         # Act
         with pytest.raises(TypecastError):
             typecast_client.voices(model=target_model)
+
+    def test_get_voice_by_id(self, typecast_client):
+        # Arrange - Get a voice first
+        voices = typecast_client.voices()
+        assert len(voices) > 0
+        voice_id = voices[0].voice_id
+
+        # Act
+        voice = typecast_client.get_voice(voice_id)
+
+        # Assert
+        assert isinstance(voice, VoicesResponse)
+        assert voice.voice_id == voice_id
+        assert voice.voice_name
+        assert voice.model
+        assert voice.emotions

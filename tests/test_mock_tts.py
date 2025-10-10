@@ -26,14 +26,12 @@ class TestMockTTS:
 
         request = TTSRequest(
             text="안녕하세요",
-            voice_id="test_voice_id",
+            voice_id="tc_test_voice_id",
             model="ssfm-v21",
             language="kor",
             prompt=Prompt(
                 emotion_preset="happy",
-                emotion_intensity=1.5,
-                speed=1.2,
-                intonation=1
+                emotion_intensity=1.5
             ),
             output=Output(
                 volume=80,
