@@ -22,9 +22,10 @@ class AsyncTypecast:
         self.session: Optional[aiohttp.ClientSession] = None
 
     async def __aenter__(self):
-        self.session = aiohttp.ClientSession(
-            headers={"X-API-KEY": self.api_key, "Content-Type": "application/json"}
-        )
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["X-API-KEY"] = self.api_key
+        self.session = aiohttp.ClientSession(headers=headers)
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):

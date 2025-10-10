@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from typecast.async_client import AsyncTypecast
@@ -5,6 +7,9 @@ from typecast.models import LanguageCode, TTSRequest, TTSResponse, VoicesRespons
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(
+    not os.getenv("TYPECAST_API_KEY"), reason="TYPECAST_API_KEY not set"
+)
 class TestAsyncClient:
     async def test_async_text_to_speech(self):
         """Test async text-to-speech with real API"""

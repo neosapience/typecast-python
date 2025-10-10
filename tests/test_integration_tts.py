@@ -11,6 +11,10 @@ def typecast_client():
     # 환경 변수에서 API 키를 가져옵니다
     return Typecast()
 
+
+@pytest.mark.skipif(
+    not os.getenv("TYPECAST_API_KEY"), reason="TYPECAST_API_KEY not set"
+)
 class TestTTSIntegration:
     def test_text_to_speech_integration(self, typecast_client):
         # Arrange
