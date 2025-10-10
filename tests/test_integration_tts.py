@@ -8,7 +8,7 @@ from typecast.models import TTSRequest, TTSResponse
 
 @pytest.fixture
 def typecast_client():
-    # 환경 변수에서 API 키를 가져옵니다
+    # Get API key from environment variables
     return Typecast()
 
 
@@ -18,7 +18,7 @@ def typecast_client():
 class TestTTSIntegration:
     def test_text_to_speech_integration(self, typecast_client):
         # Arrange
-        # 먼저 사용 가능한 voice를 가져옵니다
+        # First, get an available voice
         voices = typecast_client.voices(model="ssfm-v21")
         voice = voices[0]
 
@@ -26,7 +26,7 @@ class TestTTSIntegration:
         model = voice.model
 
         request = TTSRequest(
-            text="안녕하세요, 타입캐스트 테스트입니다.", voice_id=voice_id, model=model
+            text="Hello, this is a Typecast test.", voice_id=voice_id, model=model
         )
 
         # Act

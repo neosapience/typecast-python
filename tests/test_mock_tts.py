@@ -7,7 +7,7 @@ from typecast.models import Output, Prompt, TTSRequest, TTSResponse
 
 @pytest.fixture
 def typecast_client():
-    # 환경 변수에서 API 키를 가져옵니다
+    # Get API key from environment variables
     return Typecast()
 
 
@@ -24,10 +24,10 @@ class TestMockTTS:
         )
 
         request = TTSRequest(
-            text="안녕하세요",
+            text="Hello, this is a test",
             voice_id="tc_test_voice_id",
             model="ssfm-v21",
-            language="kor",
+            language="eng",
             prompt=Prompt(emotion_preset="happy", emotion_intensity=1.5),
             output=Output(
                 volume=80, audio_pitch=5, audio_tempo=1.5, audio_format="mp3"

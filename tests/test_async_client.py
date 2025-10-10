@@ -20,10 +20,10 @@ class TestAsyncClient:
 
             # Create request
             request = TTSRequest(
-                text="안녕하세요, 비동기 테스트입니다.",
+                text="Hello, this is an async test.",
                 voice_id=voices[0].voice_id,
                 model="ssfm-v21",
-                language=LanguageCode.KOR,
+                language=LanguageCode.ENG,
             )
 
             # Generate audio

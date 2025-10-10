@@ -9,7 +9,7 @@ from typecast.models import VoicesResponse
 
 @pytest.fixture
 def typecast_client():
-    # 환경 변수에서 API 키를 가져옵니다
+    # Get API key from environment variables
     return Typecast()
 
 
@@ -25,7 +25,7 @@ class TestVoicesIntegration:
         assert isinstance(voices, list)
         assert len(voices) > 0
 
-        # 첫 번째 voice의 필수 필드 검증
+        # Verify required fields of the first voice
         first_voice = voices[0]
         assert first_voice.voice_id
         assert first_voice.voice_name
@@ -42,7 +42,7 @@ class TestVoicesIntegration:
         assert isinstance(voices, list)
         assert len(voices) > 0
 
-        # 모든 voice가 지정된 model을 가지고 있는지 확인
+        # Verify all voices have the specified model
         for voice in voices:
             assert voice.model == target_model
             assert voice.voice_id

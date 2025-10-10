@@ -130,8 +130,8 @@ Use the `LanguageCode` enum for type-safe language selection:
 from typecast.models import LanguageCode
 
 request = TTSRequest(
-    text="안녕하세요",
-    language=LanguageCode.KOR,
+    text="Hello",
+    language=LanguageCode.ENG,
     ...
 )
 ```
