@@ -191,4 +191,4 @@ cli = Typecast(host="https://custom-api.example.com")
 
 ## License
 
-MIT License
+Apache License 2.0
