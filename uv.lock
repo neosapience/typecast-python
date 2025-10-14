@@ -1106,8 +1106,8 @@ wheels = [
 ]
 
 [[package]]
-name = "typecast"
-version = "0.1.2"
+name = "typecast-python"
+version = "0.1.3"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
