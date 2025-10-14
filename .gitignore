@@ -24,6 +24,8 @@ wheels/
 .env
 !.env.example
 .venv
+.test_venv
+.ci_test_venv
 env/
 venv/
 ENV/

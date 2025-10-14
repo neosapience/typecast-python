@@ -45,10 +45,30 @@ clean: ## Clean up build artifacts and cache
 build: clean ## Build distribution packages
 	uv build
 
-publish: build ## Publish to PyPI (requires credentials)
+test-package: build ## Test the built package in isolated environment
+	@echo "$(BLUE)Testing built package in isolated environment...$(NC)"
+	@rm -rf .test_venv
+	@python3 -m venv .test_venv
+	@.test_venv/bin/pip install --quiet dist/*.whl python-dotenv > /dev/null
+	@echo "$(GREEN)✓ Package installed successfully$(NC)"
+	@echo ""
+	@echo "$(BLUE)Running basic smoke tests...$(NC)"
+	@.test_venv/bin/python tests/smoke_test.py || (rm -rf .test_venv && exit 1)
+	@echo ""
+	@if [ -f .env ]; then \
+		echo "$(BLUE)Running integration smoke tests (with real API calls)...$(NC)"; \
+		.test_venv/bin/python tests/integration_smoke_test.py || (rm -rf .test_venv && exit 1); \
+	else \
+		echo "$(YELLOW)⚠ No .env file found, skipping integration tests$(NC)"; \
+	fi
+	@rm -rf .test_venv
+	@echo ""
+	@echo "$(GREEN)🎉 All package tests passed!$(NC)"
+
+publish: test-package ## Publish to PyPI (requires credentials)
 	uv publish
 
-publish-test: build ## Publish to TestPyPI
+publish-test: test-package ## Publish to TestPyPI
 	uv publish --publish-url https://test.pypi.org/legacy/
 
 # Docker Commands
@@ -73,6 +93,14 @@ docker-lint: ## Run linters in Docker
 docker-format: ## Format code in Docker
 	docker compose exec typecast-dev uv run ruff format src/ tests/ examples/
 
+docker-test-package: build ## Test built package in Docker (isolated)
+	@echo "$(BLUE)Testing package in Docker container...$(NC)"
+	@docker run --rm -v $(PWD)/dist:/dist python:3.12-slim bash -c "\
+		pip install --quiet /dist/*.whl && \
+		python -c 'from typecast import Typecast, AsyncTypecast; print(\"✓ Package test passed in Docker\")' \
+	"
+	@echo "$(GREEN)✓ Docker package test completed$(NC)"
+
 # CI/CD Commands (for CircleCI)
 ci-install: ## Install dependencies for CI
 	pip install uv
@@ -88,6 +116,13 @@ ci-test: ## Run tests in CI with coverage
 ci-build: ## Build package in CI
 	uv build
 	ls -lh dist/
+
+ci-test-package: ci-build ## Test built package in CI
+	@echo "Testing built package..."
+	@python3 -m venv .ci_test_venv
+	@.ci_test_venv/bin/pip install --quiet dist/*.whl
+	@.ci_test_venv/bin/python -c "from typecast import Typecast, AsyncTypecast; print('✓ CI package test passed')"
+	@rm -rf .ci_test_venv
 
 # Development helpers
 dev-setup: ## Setup development environment
