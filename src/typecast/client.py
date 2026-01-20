@@ -186,3 +186,23 @@ class Typecast:
             self._handle_error(response.status_code, response.text)
 
         return [VoiceV2Response.model_validate(item) for item in response.json()]
+
+    def voice_v2(self, voice_id: str) -> VoiceV2Response:
+        """Get a specific voice by ID with enhanced metadata (V2 API)
+
+        Args:
+            voice_id: The voice ID (e.g., 'tc_62a8975e695ad26f7fb514d1')
+
+        Returns:
+            VoiceV2Response with voice information and metadata
+
+        Raises:
+            NotFoundError: If the voice ID does not exist.
+        """
+        endpoint = f"/v2/voices/{voice_id}"
+        response = self.session.get(f"{self.host}{endpoint}")
+
+        if response.status_code != 200:
+            self._handle_error(response.status_code, response.text)
+
+        return VoiceV2Response.model_validate(response.json())

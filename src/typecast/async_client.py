@@ -212,3 +212,27 @@ class AsyncTypecast:
 
             data = await response.json()
             return [VoiceV2Response.model_validate(item) for item in data]
+
+    async def voice_v2(self, voice_id: str) -> VoiceV2Response:
+        """Get a specific voice by ID with enhanced metadata (V2 API)
+
+        Args:
+            voice_id: The voice ID (e.g., 'tc_62a8975e695ad26f7fb514d1')
+
+        Returns:
+            VoiceV2Response with voice information and metadata
+
+        Raises:
+            NotFoundError: If the voice ID does not exist.
+        """
+        if not self.session:
+            raise TypecastError("Client session not initialized. Use async with.")
+        endpoint = f"/v2/voices/{voice_id}"
+
+        async with self.session.get(f"{self.host}{endpoint}") as response:
+            if response.status != 200:
+                error_text = await response.text()
+                self._handle_error(response.status, error_text)
+
+            data = await response.json()
+            return VoiceV2Response.model_validate(data)
