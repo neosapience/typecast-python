@@ -12,7 +12,7 @@ from .exceptions import (
     UnauthorizedError,
     UnprocessableEntityError,
 )
-from .models import TTSRequest, TTSResponse, VoicesResponse
+from .models import TTSRequest, TTSResponse, VoicesResponse, VoiceV2Response, VoicesV2Filter
 
 
 class Typecast:
@@ -85,3 +85,34 @@ class Typecast:
         if isinstance(data, list) and len(data) > 0:
             return VoicesResponse.model_validate(data[0])
         return VoicesResponse.model_validate(data)
+
+    def voices_v2(
+        self, filter: Optional[VoicesV2Filter] = None
+    ) -> list[VoiceV2Response]:
+        """Get voices with enhanced metadata (V2 API)
+
+        Returns voices with model-grouped emotions and additional metadata.
+
+        Args:
+            filter: Optional filter options (model, gender, age, use_cases)
+
+        Returns:
+            List of VoiceV2Response objects
+        """
+        endpoint = "/v2/voices"
+        params = {}
+        if filter:
+            filter_dict = filter.model_dump(exclude_none=True)
+            # Convert enum values to strings
+            for key, value in filter_dict.items():
+                if hasattr(value, "value"):
+                    params[key] = value.value
+                else:
+                    params[key] = value
+
+        response = self.session.get(f"{self.host}{endpoint}", params=params)
+
+        if response.status_code != 200:
+            self._handle_error(response.status_code, response.text)
+
+        return [VoiceV2Response.model_validate(item) for item in response.json()]
