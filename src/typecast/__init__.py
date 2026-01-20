@@ -1,5 +1,15 @@
 from .async_client import AsyncTypecast
 from .client import Typecast
+from .exceptions import (
+    BadRequestError,
+    InternalServerError,
+    NotFoundError,
+    PaymentRequiredError,
+    RateLimitError,
+    TypecastError,
+    UnauthorizedError,
+    UnprocessableEntityError,
+)
 from .models import (
     Error,
     LanguageCode,
@@ -12,12 +22,23 @@ from .models import (
 )
 
 __all__ = [
+    # Clients
     "AsyncTypecast",
+    "Typecast",
+    # Exceptions
+    "BadRequestError",
+    "InternalServerError",
+    "NotFoundError",
+    "PaymentRequiredError",
+    "RateLimitError",
+    "TypecastError",
+    "UnauthorizedError",
+    "UnprocessableEntityError",
+    # Models
     "Error",
     "LanguageCode",
     "Output",
     "Prompt",
-    "Typecast",
     "TTSRequest",
     "TTSResponse",
     "VoicesResponse",

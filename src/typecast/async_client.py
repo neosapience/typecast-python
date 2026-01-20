@@ -8,6 +8,7 @@ from .exceptions import (
     InternalServerError,
     NotFoundError,
     PaymentRequiredError,
+    RateLimitError,
     TypecastError,
     UnauthorizedError,
     UnprocessableEntityError,
@@ -16,7 +17,35 @@ from .models import TTSRequest, TTSResponse, VoicesResponse, VoiceV2Response, Vo
 
 
 class AsyncTypecast:
+    """Asynchronous client for the Typecast Text-to-Speech API.
+
+    This client provides async methods to convert text to speech using AI-powered
+    voices, with support for multiple models (ssfm-v21, ssfm-v30), emotion control,
+    and audio customization.
+
+    Example:
+        >>> from typecast import AsyncTypecast
+        >>> async with AsyncTypecast(api_key="your-api-key") as client:
+        ...     response = await client.text_to_speech(TTSRequest(
+        ...         text="Hello world",
+        ...         voice_id="tc_62a8975e695ad26f7fb514d1",
+        ...         model=TTSModel.SSFM_V21
+        ...     ))
+        ...     with open("output.wav", "wb") as f:
+        ...         f.write(response.audio_data)
+    """
+
     def __init__(self, host: Optional[str] = None, api_key: Optional[str] = None):
+        """Initialize the async Typecast client.
+
+        Args:
+            host: API host URL. Defaults to TYPECAST_API_HOST env var
+                or 'https://api.typecast.ai'.
+            api_key: API key for authentication. Defaults to TYPECAST_API_KEY env var.
+
+        Raises:
+            ValueError: If no API key is provided and TYPECAST_API_KEY is not set.
+        """
         self.host = conf.get_host(host)
         self.api_key = conf.get_api_key(api_key)
         self.session: Optional[aiohttp.ClientSession] = None
@@ -33,7 +62,7 @@ class AsyncTypecast:
             await self.session.close()
 
     def _handle_error(self, status_code: int, response_text: str):
-        """Handle HTTP error responses with specific exception types"""
+        """Handle HTTP error responses with specific exception types."""
         if status_code == 400:
             raise BadRequestError(f"Bad request: {response_text}")
         elif status_code == 401:
@@ -44,6 +73,8 @@ class AsyncTypecast:
             raise NotFoundError(f"Not found: {response_text}")
         elif status_code == 422:
             raise UnprocessableEntityError(f"Validation error: {response_text}")
+        elif status_code == 429:
+            raise RateLimitError(f"Rate limit exceeded: {response_text}")
         elif status_code == 500:
             raise InternalServerError(f"Internal server error: {response_text}")
         else:
@@ -53,6 +84,22 @@ class AsyncTypecast:
             )
 
     async def text_to_speech(self, request: TTSRequest) -> TTSResponse:
+        """Convert text to speech asynchronously.
+
+        Args:
+            request: TTS request containing text, voice_id, model, and optional
+                settings for emotion, language, and audio output.
+
+        Returns:
+            TTSResponse containing audio_data (bytes), duration (float), and format (str).
+
+        Raises:
+            TypecastError: If the client session is not initialized.
+            BadRequestError: If the request is malformed.
+            UnauthorizedError: If the API key is invalid.
+            PaymentRequiredError: If credits are insufficient.
+            UnprocessableEntityError: If validation fails.
+        """
         if not self.session:
             raise TypecastError("Client session not initialized. Use async with.")
         endpoint = "/v1/text-to-speech"
@@ -71,6 +118,18 @@ class AsyncTypecast:
             )
 
     async def voices(self, model: Optional[str] = None) -> list[VoicesResponse]:
+        """Get available voices (V1 API) asynchronously.
+
+        Args:
+            model: Optional model filter (e.g., 'ssfm-v21', 'ssfm-v30').
+
+        Returns:
+            List of VoicesResponse objects with voice information.
+
+        Note:
+            This method is deprecated. Use voices_v2() for enhanced metadata
+            and filtering options.
+        """
         if not self.session:
             raise TypecastError("Client session not initialized. Use async with.")
         endpoint = "/v1/voices"
@@ -89,6 +148,20 @@ class AsyncTypecast:
             return [VoicesResponse.model_validate(item) for item in data]
 
     async def get_voice(self, voice_id: str) -> VoicesResponse:
+        """Get a specific voice by ID (V1 API) asynchronously.
+
+        Args:
+            voice_id: The voice ID (e.g., 'tc_62a8975e695ad26f7fb514d1').
+
+        Returns:
+            VoicesResponse with voice information and available emotions.
+
+        Raises:
+            NotFoundError: If the voice ID does not exist.
+
+        Note:
+            This method is deprecated. Use voices_v2() for enhanced metadata.
+        """
         if not self.session:
             raise TypecastError("Client session not initialized. Use async with.")
         endpoint = f"/v1/voices/{voice_id}"

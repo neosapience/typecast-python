@@ -35,12 +35,12 @@ print(f"Duration: {response.duration}s, Format: {response.format}")
 
 ## Features
 
-- 🎙️ **Multiple Voice Models**: Support for various AI voice models (ssfm-v21, v20, etc.)
-- 🌍 **Multi-language Support**: 27+ languages including English, Korean, Spanish, Japanese, Chinese, and more
-- 😊 **Emotion Control**: Adjust emotional expression (happy, sad, angry, normal) with intensity control
-- 🎚️ **Audio Customization**: Control volume, pitch, tempo, and output format (WAV/MP3)
+- 🎙️ **Multiple Voice Models**: Support for ssfm-v21 and ssfm-v30 AI voice models
+- 🌍 **Multi-language Support**: 37 languages including English, Korean, Spanish, Japanese, Chinese, and more
+- 😊 **Emotion Control**: Preset emotions (happy, sad, angry, whisper, toneup, tonedown) or smart context-aware inference
+- 🎚️ **Audio Customization**: Control volume (0-200), pitch (-12 to +12 semitones), tempo (0.5x to 2.0x), and format (WAV/MP3)
 - ⚡ **Async Support**: Built-in async client for high-performance applications
-- 🔍 **Voice Discovery**: List and search available voices by model
+- 🔍 **Voice Discovery**: V2 API with filtering by model, gender, age, and use cases
 
 ## Advanced Usage
 
@@ -74,16 +74,26 @@ response = cli.text_to_speech(TTSRequest(
 ### Voice Discovery
 
 ```python
-# List all voices
-voices = cli.voices()
+from typecast.models import VoicesV2Filter, TTSModel, GenderEnum, AgeEnum
 
-# Filter by model
+# V2 API (recommended) - Enhanced metadata with filtering
+voices = cli.voices_v2()
+
+# Filter by model, gender, age, or use case
+filtered_voices = cli.voices_v2(VoicesV2Filter(
+    model=TTSModel.SSFM_V30,
+    gender=GenderEnum.FEMALE,
+    age=AgeEnum.YOUNG_ADULT
+))
+
+# Each voice shows supported models and emotions
+for voice in voices[:3]:
+    print(f"Voice: {voice.voice_name}")
+    print(f"Gender: {voice.gender}, Age: {voice.age}")
+    print(f"Models: {', '.join(m.version.value for m in voice.models)}")
+
+# V1 API (legacy)
 v21_voices = cli.voices(model="ssfm-v21")
-
-# Get specific voice
-voice = cli.get_voice("tc_62a8975e695ad26f7fb514d1")
-print(f"Voice: {voice.voice_name}")
-print(f"Available emotions: {voice.emotions}")
 ```
 
 ### Async Client
@@ -108,9 +118,51 @@ async def main():
 asyncio.run(main())
 ```
 
+### ssfm-v30 Model Features
+
+The ssfm-v30 model offers enhanced emotion control with two modes:
+
+#### Preset Emotion Control
+
+```python
+from typecast.models import TTSRequest, PresetPrompt, TTSModel
+
+response = cli.text_to_speech(TTSRequest(
+    text="I'm so happy to meet you!",
+    voice_id="tc_672c5f5ce59fac2a48faeaee",
+    model=TTSModel.SSFM_V30,
+    language="eng",
+    prompt=PresetPrompt(
+        emotion_type="preset",
+        emotion_preset="happy",      # normal, happy, sad, angry, whisper, toneup, tonedown
+        emotion_intensity=1.5
+    )
+))
+```
+
+#### Smart Context-Aware Emotion
+
+Let the AI infer emotion from surrounding context:
+
+```python
+from typecast.models import TTSRequest, SmartPrompt, TTSModel
+
+response = cli.text_to_speech(TTSRequest(
+    text="Everything is so incredibly perfect.",
+    voice_id="tc_672c5f5ce59fac2a48faeaee",
+    model=TTSModel.SSFM_V30,
+    language="eng",
+    prompt=SmartPrompt(
+        emotion_type="smart",
+        previous_text="I just got the best news ever!",
+        next_text="I cannot wait to share this with everyone!"
+    )
+))
+```
+
 ## Supported Languages
 
-The SDK supports 27 languages with ISO 639-3 codes:
+The SDK supports 37 languages with ISO 639-3 codes:
 
 | Language | Code | Language | Code | Language | Code |
 |----------|------|----------|------|----------|------|
@@ -123,6 +175,10 @@ The SDK supports 27 languages with ISO 639-3 codes:
 | Polish | `pol` | Slovak | `slk` | Portuguese | `por` |
 | Dutch | `nld` | Arabic | `ara` | Bulgarian | `bul` |
 | Russian | `rus` | Croatian | `hrv` | Romanian | `ron` |
+| Bengali | `ben` | Hindi | `hin` | Hungarian | `hun` |
+| Hokkien | `nan` | Norwegian | `nor` | Punjabi | `pan` |
+| Thai | `tha` | Turkish | `tur` | Vietnamese | `vie` |
+| Cantonese | `yue` | | | | |
 
 Use the `LanguageCode` enum for type-safe language selection:
 
@@ -141,12 +197,13 @@ request = TTSRequest(
 The SDK provides specific exceptions for different HTTP status codes:
 
 ```python
-from typecast.exceptions import (
+from typecast import (
     BadRequestError,           # 400
     UnauthorizedError,         # 401
     PaymentRequiredError,      # 402
     NotFoundError,             # 404
     UnprocessableEntityError,  # 422
+    RateLimitError,            # 429
     InternalServerError,       # 500
     TypecastError              # Base exception
 )
@@ -157,6 +214,8 @@ except UnauthorizedError:
     print("Invalid API key")
 except PaymentRequiredError:
     print("Insufficient credits")
+except RateLimitError:
+    print("Rate limit exceeded - please wait and retry")
 except TypecastError as e:
     print(f"Error: {e.message}, Status: {e.status_code}")
 ```
