@@ -35,6 +35,13 @@ class NotFoundError(TypecastError):
         super().__init__(message, status_code=404)
 
 
+class RateLimitError(TypecastError):
+    """429 Too Many Requests - Rate limit exceeded"""
+
+    def __init__(self, message: str):
+        super().__init__(message, status_code=429)
+
+
 class UnprocessableEntityError(TypecastError):
     """422 Unprocessable Entity - Validation error"""
 
